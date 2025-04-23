@@ -53,7 +53,7 @@
             font-size: 16px;
         }
         
-        /* Improved Progress tabs for mobile */
+        /* Colorful Progress tabs for mobile */
         .progress-tabs {
             display: flex;
             margin-bottom: 30px;
@@ -75,32 +75,31 @@
             color: #666;
             transition: all 0.3s ease;
             cursor: pointer;
-            border-right: 1px solid rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
             justify-content: center;
             min-height: 60px;
         }
         
-        .progress-tab:last-child {
-            border-right: none;
-        }
-        
-        .progress-tab.active {
+        /* Colorful tabs */
+        .progress-tab:nth-child(1).active {
+            background-color: #1A237E; /* Deep blue */
             color: white;
         }
         
-        /* Background indicator bar */
-        .progress-tabs:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 25%; /* Will be updated via JS */
-            height: 100%;
-            background: #1A237E;
-            transition: all 0.3s ease;
-            z-index: 0;
+        .progress-tab:nth-child(2).active {
+            background-color: #3949AB; /* Indigo */
+            color: white;
+        }
+        
+        .progress-tab:nth-child(3).active {
+            background-color: #5C6BC0; /* Lighter blue */
+            color: white;
+        }
+        
+        .progress-tab:nth-child(4).active {
+            background-color: #7986CB; /* Very light blue */
+            color: white;
         }
         
         .progress-tab-text {
@@ -196,22 +195,60 @@
             margin-bottom: 0;
         }
         
+        /* Improved Subject Selection */
+        .subject-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .subject-item {
+            display: flex;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        .subject-item:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .subject-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            accent-color: #1A237E;
+        }
+        
+        .subject-label {
+            flex: 1;
+            font-weight: 500;
+            margin-bottom: 0;
+            text-align: left;
+        }
+        
         /* Custom checkboxes and radios */
         .custom-control {
             display: flex;
             align-items: center;
             margin-bottom: 10px;
-            padding: 8px 12px;
-            border-radius: 6px;
+            background-color: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 8px;
             transition: background-color 0.2s;
         }
         
         .custom-control:hover {
-            background-color: #f5f5f5;
+            background-color: #f1f1f1;
         }
         
         .custom-control input {
-            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            accent-color: #1A237E;
         }
         
         .custom-control label {
@@ -338,7 +375,7 @@
             <p>Admission Application Form</p>
         </div>
         
-        <!-- Improved Progress tabs for mobile -->
+        <!-- Improved Progress tabs with multiple colors -->
         <div class="progress-tabs" id="progress-tabs">
             <div class="progress-tab active" data-step="0">
                 <span class="progress-tab-text">Personal Info</span>
@@ -354,7 +391,7 @@
             </div>
         </div>
         
-        <form id="admission-form" action="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec" method="POST">
+        <form id="admission-form" action="https://script.google.com/macros/s/AKfycbyjkAA_cgWvZ70uBidmw9JBBteg1ikwV_HIv_xUlUbBE1QMvQHvyK-vUpeDq4Hlx7c/exec" method="POST">
             <!-- Personal Information Section -->
             <div class="form-section" id="section-personal">
                 <h2>Personal Information</h2>
@@ -513,33 +550,40 @@
                 </div>
             </div>
             
-            <!-- Subject Selection Section (Initially hidden) -->
+            <!-- Subject Selection Section (Initially hidden) with improved layout -->
             <div class="form-section" id="section-subjects" style="display: none;">
                 <h2>Subject Selection</h2>
                 <p>Select the subjects you want to study</p>
                 
-                <div id="subjects-container">
-                    <!-- Will be populated dynamically based on class and stream selection -->
+                <h3>Select your subjects:</h3>
+                <p>Select at least 5 subjects</p>
+                
+                <div id="subjects-container" class="subject-list">
+                    <!-- Will be populated dynamically for better alignment -->
                 </div>
                 
-                <div class="form-group">
-                    <label>Additional Activities (Optional)</label>
-                    <div class="checkbox-group">
-                        <div class="custom-control">
+                <div class="form-group" style="margin-top: 30px;">
+                    <h3>Additional Activities (Optional)</h3>
+                    
+                    <div class="subject-list" style="margin-top: 15px;">
+                        <div class="subject-item">
                             <input type="checkbox" id="sports" name="additionalActivities" value="Sports">
-                            <label for="sports">Sports</label>
+                            <label class="subject-label" for="sports">Sports</label>
                         </div>
-                        <div class="custom-control">
+                        
+                        <div class="subject-item">
                             <input type="checkbox" id="music" name="additionalActivities" value="Music">
-                            <label for="music">Music</label>
+                            <label class="subject-label" for="music">Music</label>
                         </div>
-                        <div class="custom-control">
+                        
+                        <div class="subject-item">
                             <input type="checkbox" id="arts" name="additionalActivities" value="Arts & Crafts">
-                            <label for="arts">Arts & Crafts</label>
+                            <label class="subject-label" for="arts">Arts & Crafts</label>
                         </div>
-                        <div class="custom-control">
+                        
+                        <div class="subject-item">
                             <input type="checkbox" id="debate" name="additionalActivities" value="Debate">
-                            <label for="debate">Debate</label>
+                            <label class="subject-label" for="debate">Debate</label>
                         </div>
                     </div>
                 </div>
@@ -555,9 +599,9 @@
                 </div>
                 
                 <div class="form-group">
-                    <div class="custom-control">
+                    <div class="subject-item" style="margin-top: 20px;">
                         <input type="checkbox" id="terms" name="terms" required>
-                        <label for="terms">I confirm that all the information provided is accurate and complete. I agree to the terms and conditions.</label>
+                        <label class="subject-label" for="terms">I confirm that all the information provided is accurate and complete. I agree to the terms and conditions.</label>
                     </div>
                     <div class="error-message" id="terms-error"></div>
                 </div>
@@ -581,35 +625,6 @@
         let currentStep = 0;
         const formSections = ['section-personal', 'section-class', 'section-subjects', 'section-review'];
         const progressTabs = document.querySelectorAll('.progress-tab');
-        const progressTabContainer = document.getElementById('progress-tabs');
-        
-        // Update tab indicator position
-        function updateTabIndicator() {
-            // Width percentage = 100 / number of tabs × current step
-            const percentageWidth = (100 / progressTabs.length);
-            const offsetPercentage = percentageWidth * currentStep;
-            progressTabContainer.style.setProperty('--tab-width', `${percentageWidth}%`);
-            progressTabContainer.style.setProperty('--tab-offset', `${offsetPercentage}%`);
-            
-            // Update the :before pseudo-element via a style tag since we can't directly modify pseudo-elements
-            document.documentElement.style.setProperty('--tab-offset', `${offsetPercentage}%`);
-            document.documentElement.style.setProperty('--tab-width', `${percentageWidth}%`);
-            
-            // Update the before element position
-            progressTabContainer.style.setProperty('--before-left', `${offsetPercentage}%`);
-            progressTabContainer.style.setProperty('--before-width', `${percentageWidth}%`);
-            
-            // Direct style setting for the pseudo-element
-            progressTabContainer.style.cssText = `--tab-offset: ${offsetPercentage}%;`;
-            
-            // Set the position directly
-            progressTabContainer.querySelector(':before') 
-                ? progressTabContainer.querySelector(':before').style.left = `${offsetPercentage}%` 
-                : null;
-        }
-        
-        // Initialize tab indicator 
-        updateTabIndicator();
         
         // Add event listener for tab clicks to jump to sections
         progressTabs.forEach(tab => {
@@ -633,7 +648,7 @@
             // Show new section
             document.getElementById(formSections[currentStep]).style.display = 'block';
             
-            // Update tab indicator
+            // Update tab indicators
             updateProgressTabs();
             
             // Update buttons
@@ -648,10 +663,6 @@
                     tab.classList.remove('active');
                 }
             });
-            
-            // Update the progress indicator position
-            progressTabContainer.style.setProperty('--before-left', `${currentStep * 25}%`);
-            document.documentElement.style.setProperty('--before-left', `${currentStep * 25}%`);
         }
         
         function updateButtons() {
@@ -795,7 +806,7 @@
             }
         });
         
-        // Set up subjects based on class and stream - MAINTAINING YOUR ORIGINAL SUBJECT NAMES
+        // Set up subjects based on class and stream with improved alignment
         function setupSubjects() {
             const classValue = document.getElementById('classApplying').value;
             const streamValue = document.getElementById('stream').value;
@@ -819,18 +830,10 @@
             }
             
             if (subjects.length > 0) {
-                const subjectHeading = document.createElement('h3');
-                subjectHeading.textContent = 'Select your subjects:';
-                subjectsContainer.appendChild(subjectHeading);
-                
-                const subjectNote = document.createElement('p');
-                subjectNote.textContent = 'Select at least 5 subjects';
-                subjectNote.style.marginBottom = '15px';
-                subjectsContainer.appendChild(subjectNote);
-                
                 subjects.forEach(subject => {
-                    const checkboxDiv = document.createElement('div');
-                    checkboxDiv.className = 'custom-control';
+                    // Create a subject item with proper alignment
+                    const subjectItem = document.createElement('div');
+                    subjectItem.className = 'subject-item';
                     
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
@@ -840,11 +843,12 @@
                     
                     const label = document.createElement('label');
                     label.htmlFor = checkbox.id;
+                    label.className = 'subject-label';
                     label.textContent = subject;
                     
-                    checkboxDiv.appendChild(checkbox);
-                    checkboxDiv.appendChild(label);
-                    subjectsContainer.appendChild(checkboxDiv);
+                    subjectItem.appendChild(checkbox);
+                    subjectItem.appendChild(label);
+                    subjectsContainer.appendChild(subjectItem);
                 });
             }
         }
@@ -1078,34 +1082,6 @@
                 document.getElementById('submit-btn').disabled = false;
                 document.getElementById('submit-btn').textContent = 'Submit Application';
             }
-        });
-        
-        // Apply tab indicator position correctly after the DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            progressTabContainer.style.setProperty('--tab-width', `${100 / progressTabs.length}%`);
-            progressTabContainer.style.setProperty('--tab-offset', '0%');
-            
-            // Direct style for the container - custom property hack for the :before element
-            progressTabContainer.style.cssText = 
-                `--before-left: 0; 
-                 --before-width: ${100 / progressTabs.length}%;`;
-                 
-            // Set inline style for the pseudo-element using JavaScript
-            const style = document.createElement('style');
-            style.textContent = `
-                .progress-tabs:before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: ${100 / progressTabs.length}%;
-                    height: 100%;
-                    background: #1A237E;
-                    transition: all 0.3s ease;
-                    z-index: 0;
-                }
-            `;
-            document.head.appendChild(style);
         });
     </script>
 </body>
