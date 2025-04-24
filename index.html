@@ -315,6 +315,14 @@
             background-color: #E56200;
         }
         
+        .print-button {
+            background-color: #4CAF50;
+        }
+        
+        .print-button:hover {
+            background-color: #3e8e41;
+        }
+        
         /* Enhanced Review section */
         .review-section {
             margin-bottom: 30px;
@@ -383,6 +391,33 @@
         .sheet-info a:hover {
             text-decoration: underline;
         }
+        
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 20px;
+                max-width: 100%;
+            }
+            
+            .progress-tabs, .buttons, .sheet-info {
+                display: none;
+            }
+            
+            h1, h2, h3, h4 {
+                color: black;
+            }
+            
+            .form-section {
+                page-break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body>
@@ -408,8 +443,8 @@
             </div>
         </div>
         
-        <form id="admission-form" method="POST">
-            <input type="hidden" id="formType" name="formType" value="admission">
+        <form id="admission-form" action="https://script.google.com/macros/s/AKfycbyjkAA_cgWvZ70uBidmw9JBBteg1ikwV_HIv_xUlUbBE1QMvQHvyK-vUpeDq4Hlx7c/exec" method="POST">
+            <input type="hidden" name="form_submitted" value="true">
             
             <!-- Personal Information Section -->
             <div class="form-section" id="section-personal">
@@ -754,7 +789,8 @@
             <div class="buttons">
                 <button type="button" id="prev-btn" class="back-button" style="display: none;">Previous</button>
                 <button type="button" id="next-btn">Continue</button>
-                <button type="button" id="submit-btn" class="submit-button" style="display: none;">Submit Application</button>
+                <button type="submit" id="submit-btn" class="submit-button" style="display: none;">Submit Application</button>
+                <button type="button" id="print-btn" class="print-button" style="display: none;" onclick="window.print()">Print Form</button>
             </div>
         </form>
         
@@ -768,7 +804,6 @@
         let currentStep = 0;
         const formSections = ['section-personal', 'section-class', 'section-subjects', 'section-review'];
         const progressTabs = document.querySelectorAll('.progress-tab');
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyLvXNYAgJ6GxdSt3upzWvTZDy6DvEBukm10UL_kHxGPRGlNIMllbc0HVGHF7xV0Tw5/exec';
         
         // Add event listener for tab clicks to jump to sections
         progressTabs.forEach(tab => {
@@ -813,17 +848,20 @@
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
             const submitBtn = document.getElementById('submit-btn');
+            const printBtn = document.getElementById('print-btn');
             
             // Show/hide previous button
             prevBtn.style.display = currentStep > 0 ? 'block' : 'none';
             
-            // Show/hide next and submit buttons
+            // Show/hide next, submit, and print buttons
             if (currentStep === formSections.length - 1) {
                 nextBtn.style.display = 'none';
                 submitBtn.style.display = 'block';
+                printBtn.style.display = 'block';
             } else {
                 nextBtn.style.display = 'block';
                 submitBtn.style.display = 'none';
+                printBtn.style.display = 'none';
             }
         }
         
@@ -1034,6 +1072,7 @@
             reviewContent.innerHTML = '';
             
             const form = document.getElementById('admission-form');
+            const formData = new FormData(form);
             
             // Personal Information
             const personalSection = document.createElement('div');
@@ -1047,19 +1086,12 @@
             personalTable.className = 'review-table';
             
             // Add personal fields
-            addReviewRow(personalTable, 'Name', `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`);
-            addReviewRow(personalTable, 'Date of Birth', document.getElementById('dob').value);
-            
-            // Get gender value
-            let genderValue = '';
-            document.querySelectorAll('input[name="gender"]').forEach(radio => {
-                if (radio.checked) genderValue = radio.value;
-            });
-            addReviewRow(personalTable, 'Gender', genderValue);
-            
-            addReviewRow(personalTable, 'Phone', document.getElementById('phone').value);
-            addReviewRow(personalTable, 'Email', document.getElementById('email').value || 'Not provided');
-            addReviewRow(personalTable, 'Address', `${document.getElementById('address').value}, ${document.getElementById('city').value} - ${document.getElementById('pincode').value}`);
+            addReviewRow(personalTable, 'Name', `${formData.get('firstName')} ${formData.get('lastName')}`);
+            addReviewRow(personalTable, 'Date of Birth', formData.get('dob'));
+            addReviewRow(personalTable, 'Gender', formData.get('gender'));
+            addReviewRow(personalTable, 'Phone', formData.get('phone'));
+            addReviewRow(personalTable, 'Email', formData.get('email') || 'Not provided');
+            addReviewRow(personalTable, 'Address', `${formData.get('address')}, ${formData.get('city')} - ${formData.get('pincode')}`);
             
             personalSection.appendChild(personalTable);
             reviewContent.appendChild(personalSection);
@@ -1075,10 +1107,10 @@
             const parentTable = document.createElement('table');
             parentTable.className = 'review-table';
             
-            addReviewRow(parentTable, 'Name', document.getElementById('parentName').value);
-            addReviewRow(parentTable, 'Relationship', document.getElementById('relationship').value);
-            addReviewRow(parentTable, 'Phone', document.getElementById('parentPhone').value);
-            addReviewRow(parentTable, 'Email', document.getElementById('parentEmail').value || 'Not provided');
+            addReviewRow(parentTable, 'Name', formData.get('parentName'));
+            addReviewRow(parentTable, 'Relationship', formData.get('relationship'));
+            addReviewRow(parentTable, 'Phone', formData.get('parentPhone'));
+            addReviewRow(parentTable, 'Email', formData.get('parentEmail') || 'Not provided');
             
             parentSection.appendChild(parentTable);
             reviewContent.appendChild(parentSection);
@@ -1094,10 +1126,10 @@
             const academicTable = document.createElement('table');
             academicTable.className = 'review-table';
             
-            addReviewRow(academicTable, 'Class Applying For', `Class ${document.getElementById('classApplying').value}`);
+            addReviewRow(academicTable, 'Class Applying For', `Class ${formData.get('classApplying')}`);
             
-            if (document.getElementById('stream').value) {
-                addReviewRow(academicTable, 'Stream', document.getElementById('stream').value);
+            if (formData.get('stream')) {
+                addReviewRow(academicTable, 'Stream', formData.get('stream'));
             }
             
             academicSection.appendChild(academicTable);
@@ -1183,73 +1215,101 @@
         }
         
         // Form submission handler
-        document.getElementById('submit-btn').addEventListener('click', async function() {
+        document.getElementById('admission-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
             // Final validation
             if (!validateCurrentSection()) {
                 return;
             }
             
-            // Get form data
-            const formData = new FormData();
+            // Get the form data
+            const form = document.getElementById('admission-form');
             
-            // Add basic form fields
-            formData.append('firstName', document.getElementById('firstName').value);
-            formData.append('lastName', document.getElementById('lastName').value);
-            formData.append('dob', document.getElementById('dob').value);
+            // For Google Sheets to work properly, collect all data as string values
+            const jsonData = {};
             
-            // Add gender
-            document.querySelectorAll('input[name="gender"]').forEach(radio => {
-                if (radio.checked) formData.append('gender', radio.value);
+            // Get basic form fields
+            const formFields = [
+                'firstName', 'lastName', 'dob', 'gender', 'phone', 'email',
+                'address', 'city', 'pincode', 'parentName', 'relationship',
+                'parentPhone', 'parentEmail', 'classApplying', 'stream'
+            ];
+            
+            formFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element) {
+                    jsonData[field] = element.value;
+                }
             });
             
-            formData.append('phone', document.getElementById('phone').value);
-            formData.append('email', document.getElementById('email').value || '');
-            formData.append('address', document.getElementById('address').value);
-            formData.append('city', document.getElementById('city').value);
-            formData.append('pincode', document.getElementById('pincode').value);
-            formData.append('parentName', document.getElementById('parentName').value);
-            formData.append('relationship', document.getElementById('relationship').value);
-            formData.append('parentPhone', document.getElementById('parentPhone').value);
-            formData.append('parentEmail', document.getElementById('parentEmail').value || '');
-            formData.append('classApplying', document.getElementById('classApplying').value);
-            formData.append('stream', document.getElementById('stream').value || '');
-            
-            // Add subjects
-            const subjects = [];
+            // Get subjects (join as comma-separated string)
+            const selectedSubjects = [];
             document.querySelectorAll('input[name="subjects"]:checked').forEach(checkbox => {
-                subjects.push(checkbox.value);
+                selectedSubjects.push(checkbox.value);
             });
-            formData.append('subjects', subjects.join(', '));
+            jsonData.subjects = selectedSubjects.join(', ');
             
-            // Add additional activities
-            const activities = [];
+            // Get additional activities
+            const selectedActivities = [];
             document.querySelectorAll('input[name="additionalActivities"]:checked').forEach(checkbox => {
-                activities.push(checkbox.value);
+                selectedActivities.push(checkbox.value);
             });
-            formData.append('additionalActivities', activities.join(', '));
+            jsonData.additionalActivities = selectedActivities.join(', ');
             
-            // Add form type
-            formData.append('formType', 'admission');
+            // Add form_submitted flag
+            jsonData.form_submitted = true;
+            
+            // Get the Google Script URL
+            const scriptURL = form.action;
             
             try {
                 document.getElementById('submit-btn').disabled = true;
                 document.getElementById('submit-btn').textContent = 'Submitting...';
                 
-                // Directly use fetch to submit the form to Google Apps Script
+                // Send the data
                 const response = await fetch(scriptURL, {
                     method: 'POST',
-                    body: formData
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(jsonData),
                 });
                 
                 if (response.ok) {
-                    alert('Application submitted successfully!');
-                    window.location.href = 'success.html';
+                    try {
+                        const result = await response.json();
+                        if (result.success) {
+                            alert('Application submitted successfully! Your application ID is: ' + result.applicationId);
+                            window.location.href = `success.html?id=${result.applicationId}`;
+                        } else {
+                            throw new Error(result.message || 'Unknown error occurred');
+                        }
+                    } catch (parseError) {
+                        throw new Error('Could not parse server response');
+                    }
                 } else {
                     throw new Error('Network response was not ok');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('There was an error submitting your application. Please try again.');
+                
+                // Store locally as fallback
+                const applicationId = 'APP' + Math.floor(100000 + Math.random() * 900000);
+                const applicationData = {
+                    ...jsonData,
+                    applicationId,
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Save to local storage
+                const storedApplications = JSON.parse(localStorage.getItem('applications') || '[]');
+                storedApplications.push(applicationData);
+                localStorage.setItem('applications', JSON.stringify(storedApplications));
+                
+                alert('Your application has been saved locally. Your application ID is: ' + applicationId);
+                window.location.href = `success.html?id=${applicationId}`;
             } finally {
                 document.getElementById('submit-btn').disabled = false;
                 document.getElementById('submit-btn').textContent = 'Submit Application';
