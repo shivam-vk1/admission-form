@@ -229,6 +229,23 @@
             text-align: left;
         }
         
+        /* Subject Categories */
+        .subject-category {
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .subject-category h4 {
+            margin-bottom: 15px;
+            color: #1A237E;
+            font-size: 16px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+        
         /* Custom checkboxes and radios */
         .custom-control {
             display: flex;
@@ -277,6 +294,7 @@
             display: flex;
             gap: 15px;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
         
         .back-button {
@@ -291,11 +309,18 @@
         
         .submit-button {
             background-color: #FF6D00;
-            margin-left: auto;
         }
         
         .submit-button:hover {
             background-color: #E56200;
+        }
+        
+        .print-button {
+            background-color: #4CAF50;
+        }
+        
+        .print-button:hover {
+            background-color: #3e8e41;
         }
         
         /* Enhanced Review section */
@@ -366,6 +391,33 @@
         .sheet-info a:hover {
             text-decoration: underline;
         }
+        
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 20px;
+                max-width: 100%;
+            }
+            
+            .progress-tabs, .buttons, .sheet-info {
+                display: none;
+            }
+            
+            h1, h2, h3, h4 {
+                color: black;
+            }
+            
+            .form-section {
+                page-break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body>
@@ -392,6 +444,8 @@
         </div>
         
         <form id="admission-form" action="https://script.google.com/macros/s/AKfycbyjkAA_cgWvZ70uBidmw9JBBteg1ikwV_HIv_xUlUbBE1QMvQHvyK-vUpeDq4Hlx7c/exec" method="POST">
+            <input type="hidden" name="form_submitted" value="true">
+            
             <!-- Personal Information Section -->
             <div class="form-section" id="section-personal">
                 <h2>Personal Information</h2>
@@ -542,9 +596,9 @@
                     <label for="stream">Stream (For Class 11 & 12 only)*</label>
                     <select id="stream" name="stream">
                         <option value="">Select Stream</option>
-                        <option value="Science">Science</option>
-                        <option value="Commerce">Commerce</option>
-                        <option value="Arts">Arts</option>
+                        <option value="PCM">PCM (Physics, Chemistry, Mathematics)</option>
+                        <option value="PCMB">PCMB (Physics, Chemistry, Mathematics, Biology)</option>
+                        <option value="PCPe">PCPe (Physics, Chemistry, Physical Education)</option>
                     </select>
                     <div class="error-message" id="stream-error"></div>
                 </div>
@@ -555,11 +609,135 @@
                 <h2>Subject Selection</h2>
                 <p>Select the subjects you want to study</p>
                 
-                <h3>Select your subjects:</h3>
-                <p>Select at least 5 subjects</p>
+                <!-- For Class 9-10 -->
+                <div id="junior-subjects" style="display: none;">
+                    <div class="subject-list">
+                        <div class="subject-item">
+                            <input type="checkbox" id="english-junior" name="subjects" value="English" class="junior-subject">
+                            <label class="subject-label" for="english-junior">English</label>
+                        </div>
+                        
+                        <div class="subject-item">
+                            <input type="checkbox" id="hindi-junior" name="subjects" value="Hindi" class="junior-subject">
+                            <label class="subject-label" for="hindi-junior">Hindi</label>
+                        </div>
+                        
+                        <div class="subject-item">
+                            <input type="checkbox" id="math-junior" name="subjects" value="Mathematics" class="junior-subject">
+                            <label class="subject-label" for="math-junior">Mathematics</label>
+                        </div>
+                        
+                        <div class="subject-item">
+                            <input type="checkbox" id="science-junior" name="subjects" value="Science" class="junior-subject">
+                            <label class="subject-label" for="science-junior">Science</label>
+                        </div>
+                        
+                        <div class="subject-item">
+                            <input type="checkbox" id="social-junior" name="subjects" value="Social Science" class="junior-subject">
+                            <label class="subject-label" for="social-junior">Social Science</label>
+                        </div>
+                    </div>
+                </div>
                 
-                <div id="subjects-container" class="subject-list">
-                    <!-- Will be populated dynamically for better alignment -->
+                <!-- For Class 11-12 -->
+                <div id="senior-subjects" style="display: none;">
+                    <!-- Stream 1: PCM -->
+                    <div id="pcm-subjects" class="subject-category" style="display: none;">
+                        <h4>PCM Stream Subjects</h4>
+                        <div class="subject-list">
+                            <div class="subject-item">
+                                <input type="checkbox" id="english-pcm" name="subjects" value="English" class="pcm-subject">
+                                <label class="subject-label" for="english-pcm">English</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="hindi-pcm" name="subjects" value="Hindi" class="pcm-subject">
+                                <label class="subject-label" for="hindi-pcm">Hindi</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="physics-pcm" name="subjects" value="Physics" class="pcm-subject">
+                                <label class="subject-label" for="physics-pcm">Physics</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="chemistry-pcm" name="subjects" value="Chemistry" class="pcm-subject">
+                                <label class="subject-label" for="chemistry-pcm">Chemistry</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="math-pcm" name="subjects" value="Mathematics" class="pcm-subject">
+                                <label class="subject-label" for="math-pcm">Mathematics</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stream 2: PCMB -->
+                    <div id="pcmb-subjects" class="subject-category" style="display: none;">
+                        <h4>PCMB Stream Subjects</h4>
+                        <div class="subject-list">
+                            <div class="subject-item">
+                                <input type="checkbox" id="english-pcmb" name="subjects" value="English" class="pcmb-subject">
+                                <label class="subject-label" for="english-pcmb">English</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="hindi-pcmb" name="subjects" value="Hindi" class="pcmb-subject">
+                                <label class="subject-label" for="hindi-pcmb">Hindi</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="physics-pcmb" name="subjects" value="Physics" class="pcmb-subject">
+                                <label class="subject-label" for="physics-pcmb">Physics</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="chemistry-pcmb" name="subjects" value="Chemistry" class="pcmb-subject">
+                                <label class="subject-label" for="chemistry-pcmb">Chemistry</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="math-pcmb" name="subjects" value="Mathematics" class="pcmb-subject">
+                                <label class="subject-label" for="math-pcmb">Mathematics</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="biology-pcmb" name="subjects" value="Biology" class="pcmb-subject">
+                                <label class="subject-label" for="biology-pcmb">Biology</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stream 3: PCPe -->
+                    <div id="pcpe-subjects" class="subject-category" style="display: none;">
+                        <h4>PCPe Stream Subjects</h4>
+                        <div class="subject-list">
+                            <div class="subject-item">
+                                <input type="checkbox" id="english-pcpe" name="subjects" value="English" class="pcpe-subject">
+                                <label class="subject-label" for="english-pcpe">English</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="hindi-pcpe" name="subjects" value="Hindi" class="pcpe-subject">
+                                <label class="subject-label" for="hindi-pcpe">Hindi</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="physics-pcpe" name="subjects" value="Physics" class="pcpe-subject">
+                                <label class="subject-label" for="physics-pcpe">Physics</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="chemistry-pcpe" name="subjects" value="Chemistry" class="pcpe-subject">
+                                <label class="subject-label" for="chemistry-pcpe">Chemistry</label>
+                            </div>
+                            
+                            <div class="subject-item">
+                                <input type="checkbox" id="pe-pcpe" name="subjects" value="Physical Education" class="pcpe-subject">
+                                <label class="subject-label" for="pe-pcpe">Physical Education</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="form-group" style="margin-top: 30px;">
@@ -612,6 +790,7 @@
                 <button type="button" id="prev-btn" class="back-button" style="display: none;">Previous</button>
                 <button type="button" id="next-btn">Continue</button>
                 <button type="submit" id="submit-btn" class="submit-button" style="display: none;">Submit Application</button>
+                <button type="button" id="print-btn" class="print-button" style="display: none;" onclick="window.print()">Print Form</button>
             </div>
         </form>
         
@@ -669,17 +848,20 @@
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
             const submitBtn = document.getElementById('submit-btn');
+            const printBtn = document.getElementById('print-btn');
             
             // Show/hide previous button
             prevBtn.style.display = currentStep > 0 ? 'block' : 'none';
             
-            // Show/hide next and submit buttons
+            // Show/hide next, submit, and print buttons
             if (currentStep === formSections.length - 1) {
                 nextBtn.style.display = 'none';
                 submitBtn.style.display = 'block';
+                printBtn.style.display = 'block';
             } else {
                 nextBtn.style.display = 'block';
                 submitBtn.style.display = 'none';
+                printBtn.style.display = 'none';
             }
         }
         
@@ -765,10 +947,37 @@
             
             // Special validation for subjects if we're on the subjects step
             if (currentStep === 2) {
-                const selectedSubjects = document.querySelectorAll('input[name="subjects"]:checked');
-                if (selectedSubjects.length < 5) {
-                    isValid = false;
-                    alert('Please select at least 5 subjects');
+                const classValue = document.getElementById('classApplying').value;
+                const streamValue = document.getElementById('stream').value;
+                
+                if (classValue === '9' || classValue === '10') {
+                    // For junior classes, all 5 subjects are required
+                    const selectedSubjects = document.querySelectorAll('.junior-subject:checked');
+                    if (selectedSubjects.length < 5) {
+                        isValid = false;
+                        alert('Please select all 5 subjects for Class 9-10');
+                    }
+                } else if (classValue === '11' || classValue === '12') {
+                    // For senior classes, all subjects in the selected stream are required
+                    if (streamValue === 'PCM') {
+                        const selectedPCM = document.querySelectorAll('.pcm-subject:checked');
+                        if (selectedPCM.length < 5) {
+                            isValid = false;
+                            alert('Please select all 5 subjects for PCM stream');
+                        }
+                    } else if (streamValue === 'PCMB') {
+                        const selectedPCMB = document.querySelectorAll('.pcmb-subject:checked');
+                        if (selectedPCMB.length < 6) {
+                            isValid = false;
+                            alert('Please select all 6 subjects for PCMB stream');
+                        }
+                    } else if (streamValue === 'PCPe') {
+                        const selectedPCPe = document.querySelectorAll('.pcpe-subject:checked');
+                        if (selectedPCPe.length < 5) {
+                            isValid = false;
+                            alert('Please select all 5 subjects for PCPe stream');
+                        }
+                    }
                 }
             }
             
@@ -806,50 +1015,54 @@
             }
         });
         
-        // Set up subjects based on class and stream with improved alignment
+        // Set up subjects based on class and stream
         function setupSubjects() {
             const classValue = document.getElementById('classApplying').value;
             const streamValue = document.getElementById('stream').value;
-            const subjectsContainer = document.getElementById('subjects-container');
             
-            subjectsContainer.innerHTML = ''; // Clear previous content
+            // Hide all subject sections
+            document.getElementById('junior-subjects').style.display = 'none';
+            document.getElementById('senior-subjects').style.display = 'none';
+            document.getElementById('pcm-subjects').style.display = 'none';
+            document.getElementById('pcmb-subjects').style.display = 'none';
+            document.getElementById('pcpe-subjects').style.display = 'none';
             
-            let subjects = [];
+            // Clear all subject checkboxes
+            document.querySelectorAll('input[name="subjects"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
             
-            // Use your original subject names from the code
+            // Show the appropriate subject section
             if (classValue === '9' || classValue === '10') {
-                subjects = ['Physics', 'Chemistry', 'Mathematics', 'Biology', 'English', 'Hindi/Regional Language', 'Social Science', 'Computer Science'];
-            } else if (classValue === '11' || classValue === '12') {
-                if (streamValue === 'Science') {
-                    subjects = ['Physics', 'Chemistry', 'Mathematics', 'Biology', 'English', 'Physical Education', 'Computer Science'];
-                } else if (streamValue === 'Commerce') {
-                    subjects = ['Accountancy', 'Business Studies', 'Economics', 'Mathematics', 'English', 'Physical Education', 'Computer Applications'];
-                } else if (streamValue === 'Arts') {
-                    subjects = ['History', 'Political Science', 'Geography', 'Economics', 'English', 'Sociology', 'Psychology'];
-                }
-            }
-            
-            if (subjects.length > 0) {
-                subjects.forEach(subject => {
-                    // Create a subject item with proper alignment
-                    const subjectItem = document.createElement('div');
-                    subjectItem.className = 'subject-item';
-                    
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.id = subject.replace(/\s+/g, '-').toLowerCase();
-                    checkbox.name = 'subjects';
-                    checkbox.value = subject;
-                    
-                    const label = document.createElement('label');
-                    label.htmlFor = checkbox.id;
-                    label.className = 'subject-label';
-                    label.textContent = subject;
-                    
-                    subjectItem.appendChild(checkbox);
-                    subjectItem.appendChild(label);
-                    subjectsContainer.appendChild(subjectItem);
+                document.getElementById('junior-subjects').style.display = 'block';
+                
+                // Auto-select all subjects for junior classes
+                document.querySelectorAll('.junior-subject').forEach(checkbox => {
+                    checkbox.checked = true;
                 });
+            } else if (classValue === '11' || classValue === '12') {
+                document.getElementById('senior-subjects').style.display = 'block';
+                
+                // Show the appropriate stream subjects
+                if (streamValue === 'PCM') {
+                    document.getElementById('pcm-subjects').style.display = 'block';
+                    // Auto-select all subjects for PCM
+                    document.querySelectorAll('.pcm-subject').forEach(checkbox => {
+                        checkbox.checked = true;
+                    });
+                } else if (streamValue === 'PCMB') {
+                    document.getElementById('pcmb-subjects').style.display = 'block';
+                    // Auto-select all subjects for PCMB
+                    document.querySelectorAll('.pcmb-subject').forEach(checkbox => {
+                        checkbox.checked = true;
+                    });
+                } else if (streamValue === 'PCPe') {
+                    document.getElementById('pcpe-subjects').style.display = 'block';
+                    // Auto-select all subjects for PCPe
+                    document.querySelectorAll('.pcpe-subject').forEach(checkbox => {
+                        checkbox.checked = true;
+                    });
+                }
             }
         }
         
@@ -1012,21 +1225,40 @@
             
             // Get the form data
             const form = document.getElementById('admission-form');
-            const formData = new FormData(form);
             
-            // Create JSON object
+            // For Google Sheets to work properly, collect all data as string values
             const jsonData = {};
-            formData.forEach((value, key) => {
-                // Handle multiple selections (checkboxes)
-                if (key === 'subjects' || key === 'additionalActivities') {
-                    if (!jsonData[key]) {
-                        jsonData[key] = [];
-                    }
-                    jsonData[key].push(value);
-                } else {
-                    jsonData[key] = value;
+            
+            // Get basic form fields
+            const formFields = [
+                'firstName', 'lastName', 'dob', 'gender', 'phone', 'email',
+                'address', 'city', 'pincode', 'parentName', 'relationship',
+                'parentPhone', 'parentEmail', 'classApplying', 'stream'
+            ];
+            
+            formFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element) {
+                    jsonData[field] = element.value;
                 }
             });
+            
+            // Get subjects (join as comma-separated string)
+            const selectedSubjects = [];
+            document.querySelectorAll('input[name="subjects"]:checked').forEach(checkbox => {
+                selectedSubjects.push(checkbox.value);
+            });
+            jsonData.subjects = selectedSubjects.join(', ');
+            
+            // Get additional activities
+            const selectedActivities = [];
+            document.querySelectorAll('input[name="additionalActivities"]:checked').forEach(checkbox => {
+                selectedActivities.push(checkbox.value);
+            });
+            jsonData.additionalActivities = selectedActivities.join(', ');
+            
+            // Add form_submitted flag
+            jsonData.form_submitted = true;
             
             // Get the Google Script URL
             const scriptURL = form.action;
